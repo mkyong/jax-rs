@@ -5,44 +5,46 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyResourceTest {
 
-    private HttpServer server;
-    private WebTarget target;
+    private static HttpServer httpServer;
+    private static WebTarget target;
 
-    @Before
-    public void setUp() throws Exception {
-        // start the server
-        server = Main.startServer();
-        // create the client
+    @BeforeAll
+    public static void beforeAllTests() {
+        httpServer = MainApp.startServer();
         Client c = ClientBuilder.newClient();
-
-        // uncomment the following line if you want to enable
-        // support for JSON in the client (you also have to uncomment
-        // dependency on jersey-media-json module in pom.xml and Main.startServer())
-        // --
-        // c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
-
-        target = c.target(Main.BASE_URI);
+        target = c.target(MainApp.BASE_URI);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        server.stop();
+    @AfterAll
+    public static void afterAllTests() {
+        httpServer.stop();
     }
 
-    /**
-     * Test to see that the message "Got it!" is sent in the response.
-     */
     @Test
-    public void testGetIt() {
-        String responseMsg = target.path("myresource").request().get(String.class);
-        assertEquals("Got it!", responseMsg);
+    public void testHello() {
+        String response = target.path("hello").request().get(String.class);
+        assertEquals("Jersey hello world example.", response);
     }
+
+    // add param test
+    @Test
+    public void testHelloName() {
+        String response = target.path("hello/mkyong").request().get(String.class);
+        assertEquals("Jersey: hello mkyong", response);
+    }
+
+    @Test
+    public void testHelloHK2() {
+        String response = target.path("hello/hk2").request().get(String.class);
+        assertEquals("Hello World Jersey from HK2", response);
+    }
+
 }

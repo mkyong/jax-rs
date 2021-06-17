@@ -45,7 +45,7 @@
             <artifactId>jersey-hk2</artifactId>
         </dependency>
 
-        <!-- Jetty 11 needs Servlet 5 -->
+        <!-- Jetty 11 needs Servlet API 5 -->
         <!-- java.lang.NoClassDefFoundError: jakarta/servlet/ServletInputStream -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
